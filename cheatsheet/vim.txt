@@ -1,0 +1,13 @@
+# Vim cheat sheet
+
+### Making a list of numbers
+
+```
+:put =range(11,15)
+:put =map(range(1,90), 'printf(''[ ] %02d.'', v:val)')
+:for i in range(1,10) | put ='192.168.0.'.i | endfor
+```
+
+[reference](http://vim.wikia.com/wiki/Making_a_list_of_numbers)
+
+<!-- vim: set ft=markdown: -->

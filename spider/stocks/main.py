@@ -17,7 +17,7 @@ def _print_line(line, color=False):
 
     c1 = colorama.Fore.RESET + colorama.Back.RESET + colorama.Style.RESET_ALL
 
-    format_string = "%-8s\t%-20s\t%8s\t" + c0 + "%8s\t%8s\t%s" + c1
+    format_string = "%-8s\t%-20s\t%8s\t" + c0 + "%8s\t%8s\t%8s" + c1
 
     print(format_string % (line[0], line[1].decode("utf-8"), line[2], \
           line[3], line[4], line[5]))

@@ -7,7 +7,7 @@ import sina
 
 program_version = "v0.0.1"
 
-def print_line(line, color=False):
+def _print_line(line, color=False):
     c0 = colorama.Fore.RESET
     if color:
         if "+" in line[5]:
@@ -22,27 +22,27 @@ def print_line(line, color=False):
     print(format_string % (line[0], line[1].decode("utf-8"), line[2], \
           line[3], line[4], line[5]))
 
-def main():
-    # Parse the command line options
+def _parse_args():
     parser = argparse.ArgumentParser(description="Simple stock viewer. %s" % (program_version))
     parser.add_argument("-t", "--type", help="specify the type", choices=("sh", "fund"))
     parser.set_defaults(type="sh")
     parser.add_argument("-c", "--color", help="highlight the output (default off)", action="store_true")
     parser.add_argument("-v", "--version", action="version", version=program_version)
     parser.add_argument("code", nargs=1, help="specify the code")
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def main():
+    args = _parse_args()
 
     if args.type == "sh":
         f = sina.get_sh
     elif args.type == "fund":
         f = sina.get_fund
-    else:
-        f = None
 
     assert(f is not None)
 
     t = f(args.code[0])
-    print_line(t, args.color)
+    _print_line(t, args.color)
 
 if __name__ == "__main__":
     main()

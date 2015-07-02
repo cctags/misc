@@ -17,8 +17,8 @@ class MyFundHTMLParse(HTMLParser.HTMLParser):
         self.span_fund_valRan = False
         self.span_fund_valExt = False
 
-        self.result = ["name",  "code",   "premium_rate",
-                       "value", "valRan", "valExt"]
+        # Format: name, code, premium_rate, value, valRan, valExt
+        self.result = [""] * 6
 
     def _check_attribute(self, attr, attrs):
         for i in attrs:
@@ -84,12 +84,14 @@ class MyShHTMLParse(HTMLParser.HTMLParser):
         self.span_j_serialNum = False
         self.span_j_valRange = False
         self.span_j_valExtent = False
+        self.span_stock_info_value = False
+        self.span_stock_info_value_index = -1
 
         self.strong = False
         self.strong_j_stockCurValue = False
 
-        self.result = ["name",  "code",   "premium_rate",
-                       "value", "valRan", "valExt"]
+        # Format: name, code, premium_rate, value, valRan, valExt
+        self.result = [""] * 6
 
     def _check_attribute(self, attr, attrs):
         for i in attrs:
@@ -119,6 +121,11 @@ class MyShHTMLParse(HTMLParser.HTMLParser):
             if self._check_attribute("j_valExtent", attrs):
                 self.span_j_valExtent = True
 
+            if self._check_attribute("stock_info_value", attrs):
+                self.span_stock_info_value_index = self.span_stock_info_value_index + 1
+                if self.span_stock_info_value_index == 1:
+                    self.span_stock_info_value = True
+
         elif tag == "strong":
             self.strong = True
 
@@ -142,6 +149,7 @@ class MyShHTMLParse(HTMLParser.HTMLParser):
                 self.span_j_serialNum = False
                 self.span_j_valRange = False
                 self.span_j_valExtent = False
+                self.span_stock_info_value = False
 
         if self.strong:
             if tag == "strong":
@@ -163,6 +171,8 @@ class MyShHTMLParse(HTMLParser.HTMLParser):
                 self._set_result(4, data)
             if self.span_j_valExtent:
                 self._set_result(5, data)
+            if self.span_stock_info_value:
+                self._set_result(2, data)
 
         if self.strong:
             if self.strong_j_stockCurValue:
@@ -215,8 +225,9 @@ def get_sh(code):
     # Now close the buffer object.
     buf.close()
 
-    # Calculate the previous value
-    ret[2] = "%.2f" % (float(ret[3]) - float(ret[4]))
+    # Calculate the current value
+    if len(ret[3]) == 0:
+        ret[3] = "%.2f" % (float(ret[2]) + float(ret[4]))
 
     # Return the value
     return ret

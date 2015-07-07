@@ -39,13 +39,21 @@ def parse_cm_from_p():
 def download_cm():
     for line in open(r"p/p.txt"):
         u = line.strip()
+        id = u[42:]
 
-        id = u[33:]
-        while len(id) < 8:
-            id = '0' + id
+        url_sale = r"%s/props/sale/%s" % (url, id)
+        url_rent = r"%s/props/rent/%s" % (url, id)
 
-        u = r"wget -c -t 0 %s/ -O cm/cm%s.html" % (u, id)
-        p = subprocess.Popen(u)
+        u = r"wget -c -nc -t 0 %s -O cm/cm%s.html" % (u, id)
+        p = subprocess.Popen(u.split())
+        p.wait()
+
+        u = r"wget -c -nc -t 0 %s -O cm/cm%s_sale.html" % (url_sale, id)
+        p = subprocess.Popen(u.split())
+        p.wait()
+
+        u = r"wget -c -nc -t 0 %s -O cm/cm%s_rent.html" % (url_rent, id)
+        p = subprocess.Popen(u.split())
         p.wait()
 
 def main():

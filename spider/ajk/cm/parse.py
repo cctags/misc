@@ -11,29 +11,31 @@ import sys
 
 import HTMLParser
 
-ITEM_INTERNAL_ID                    = 0
-ITEM_DISTRICT                       = 1
-ITEM_COMMUNITY                      = 2
-ITEM_NAME                           = 3
-ITEM_ADDRESS                        = 4
-ITEM_DEVELOPER                      = 5
-ITEM_PROPERTY_MANAGEMENT_COMPANY    = 6
-ITEM_PROPERTY_MANAGEMENT_TYPE       = 7
-ITEM_PROPERTY_MANAGEMENT_FEE        = 8
-ITEM_TOTAL_FLOOR_AREA               = 9
-ITEM_TOTAL_HOUSEHOLDS               = 10
-ITEM_TOTAL_SOURCE_SALE              = 11
-ITEM_TOTAL_SOURCE_RENT              = 12
-ITEM_BUILT_AGE                      = 13
-ITEM_PLOT_RATIO                     = 14
-ITEM_RENT_RATIO                     = 15
-ITEM_PARKING                        = 16
-ITEM_GREEN_COVERAGE                 = 17
-ITEM_AVERAGE_PRICE                  = 18
-ITEM_COMMENT                        = 19
-ITEM_COUNT                          = 20
+ITEM_INTERNAL_ID = 0
+ITEM_DISTRICT = 1
+ITEM_COMMUNITY = 2
+ITEM_NAME = 3
+ITEM_ADDRESS = 4
+ITEM_DEVELOPER = 5
+ITEM_PROPERTY_MANAGEMENT_COMPANY = 6
+ITEM_PROPERTY_MANAGEMENT_TYPE = 7
+ITEM_PROPERTY_MANAGEMENT_FEE = 8
+ITEM_TOTAL_FLOOR_AREA = 9
+ITEM_TOTAL_HOUSEHOLDS = 10
+ITEM_TOTAL_SOURCE_SALE = 11
+ITEM_TOTAL_SOURCE_RENT = 12
+ITEM_BUILT_AGE = 13
+ITEM_PLOT_RATIO = 14
+ITEM_RENT_RATIO = 15
+ITEM_PARKING = 16
+ITEM_GREEN_COVERAGE = 17
+ITEM_AVERAGE_PRICE = 18
+ITEM_COMMENT = 19
+ITEM_COUNT = 20
+
 
 class MyMainParser(HTMLParser.HTMLParser):
+
     def __init__(self):
         HTMLParser.HTMLParser.__init__(self)
 
@@ -154,7 +156,9 @@ class MyMainParser(HTMLParser.HTMLParser):
         if self.div_desc_cont:
             self._set_result(ITEM_COMMENT, t)
 
+
 class MySaleParser(HTMLParser.HTMLParser):
+
     def __init__(self):
         HTMLParser.HTMLParser.__init__(self)
 
@@ -188,6 +192,7 @@ class MySaleParser(HTMLParser.HTMLParser):
         if self.strong:
             self.result = data.strip()
 
+
 def get_info(filename, parser):
 
     with open(filename) as myfile:
@@ -198,6 +203,7 @@ def get_info(filename, parser):
     parser.feed(data)
     parser.close()
     return parser.result
+
 
 def get_main_info(filename):
     p = MyMainParser()
@@ -228,12 +234,14 @@ def get_main_info(filename):
 
     return info
 
+
 def get_sale_info(filename):
     p = MySaleParser()
     result = get_info(filename, p)
     if len(result) == 0:
         result = "0"
     return result
+
 
 def get_rent_info(filename):
 
@@ -243,6 +251,7 @@ def get_rent_info(filename):
     if len(result) == 0:
         result = "0"
     return result
+
 
 def save_to_file(info):
 
@@ -254,6 +263,7 @@ def save_to_file(info):
     f.write(data)
     f.close()
 
+
 def load_from_file():
 
     # Read the file.
@@ -264,6 +274,7 @@ def load_from_file():
     # Read the object from data
     return pickle.loads(data)
 
+
 def write_to_csv(filename, data):
     fd = open(filename, "wb")
     writer = csv.writer(fd, delimiter="\t")
@@ -271,6 +282,7 @@ def write_to_csv(filename, data):
     for row in data:
         writer.writerow(row)
     fd.close()
+
 
 def parse_html():
     result = []
@@ -290,12 +302,12 @@ def parse_html():
                     t[ITEM_INTERNAL_ID] = m[0]
 
                     # Get sale info
-                    t[ITEM_TOTAL_SOURCE_SALE] = get_sale_info( \
-                            os.path.join(root, filename[:-5] + "_sale.html"))
+                    t[ITEM_TOTAL_SOURCE_SALE] = get_sale_info(
+                        os.path.join(root, filename[:-5] + "_sale.html"))
 
                     # Get rent info
-                    t[ITEM_TOTAL_SOURCE_RENT] = get_rent_info( \
-                            os.path.join(root, filename[:-5] + "_rent.html"))
+                    t[ITEM_TOTAL_SOURCE_RENT] = get_rent_info(
+                        os.path.join(root, filename[:-5] + "_rent.html"))
 
                     # Calculate the rent ratio
                     sale = int(t[ITEM_TOTAL_SOURCE_SALE])
@@ -316,13 +328,15 @@ def parse_html():
 
                     # Print the progress
                     n = n + 1
-                    sys.stdout.write("Processing %d / %d ...\r" % (n, len(files) / 3))
+                    sys.stdout.write("Processing %d / %d ...\r" %
+                                     (n, len(files) / 3))
 
     print "\r\n"
 
     save_to_file(result)
 
     print "Done!"
+
 
 def cmp_info(x, y):
     x0 = pinyin.get(x[ITEM_DISTRICT])
@@ -361,13 +375,14 @@ def cmp_info(x, y):
             else:
                 return 0
 
+
 def main():
 
     # ==========
     # Step 1
     # ==========
 
-    #parse_html()
+    parse_html()
 
     # ==========
     # Step 2

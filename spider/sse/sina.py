@@ -4,6 +4,7 @@ import cStringIO
 import HTMLParser
 import pycurl
 
+
 class MyFundHTMLParse(HTMLParser.HTMLParser):
 
     def __init__(self):
@@ -70,6 +71,7 @@ class MyFundHTMLParse(HTMLParser.HTMLParser):
                 self._set_result(4, data)
             if self.span_fund_valExt:
                 self._set_result(5, data)
+
 
 class MyShHTMLParse(HTMLParser.HTMLParser):
 
@@ -178,6 +180,7 @@ class MyShHTMLParse(HTMLParser.HTMLParser):
             if self.strong_j_stockCurValue:
                 self._set_result(3, data)
 
+
 def get_fund(code):
 
     # Create a buffer object.
@@ -202,6 +205,7 @@ def get_fund(code):
 
     # Return the value
     return ret
+
 
 def get_sh(code):
 

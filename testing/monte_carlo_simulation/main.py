@@ -7,6 +7,7 @@ import math
 
 radius = 1
 
+
 def _get_random():
 
     n = random.randint(1, 100000)
@@ -14,6 +15,7 @@ def _get_random():
     f = f * radius * 2 - radius
 
     return f
+
 
 def main():
 

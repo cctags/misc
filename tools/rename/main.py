@@ -7,19 +7,25 @@ import os.path
 import re
 import sys
 
+
 def _parse_args():
     parser = argparse.ArgumentParser(description="Renames multiple files.")
-    parser.add_argument("-f", "--force", action="store_true", help="overwrite existing files")
-    parser.add_argument("-n", "--no-act", action="store_true", help="show what files would have been renamed")
-    parser.add_argument("-q", "--quiet", action="store_true", help="do not write anything to standard output")
+    parser.add_argument("-f", "--force", action="store_true",
+                        help="overwrite existing files")
+    parser.add_argument("-n", "--no-act", action="store_true",
+                        help="show what files would have been renamed")
+    parser.add_argument("-q", "--quiet", action="store_true",
+                        help="do not write anything to standard output")
     parser.add_argument("pattern", nargs=1)
     parser.add_argument("repl", nargs=1)
     parser.add_argument("file", nargs="+")
     return parser.parse_args()
 
+
 def _panic(message, errno=-1):
     print os.linesep + "*ERROR*: " + message
     sys.exit(errno)
+
 
 def _print_file_change(old_files, new_files, print_flags=None):
 
@@ -29,6 +35,7 @@ def _print_file_change(old_files, new_files, print_flags=None):
     for old, new, flag in zip(old_files, new_files, print_flags):
         if flag:
             print "'%s' -> '%s'" % (old, new)
+
 
 def main():
 

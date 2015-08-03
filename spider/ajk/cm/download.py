@@ -5,14 +5,17 @@ import os
 import re
 import subprocess
 
-url=r"http://www1.sample.com/sub"
+url = r"http://www1.sample.com/sub"
 
 # NOTE: until now we have to run this on win32 machine.
+
+
 def download_p():
     for i in range(1, 3234):
         u = r"wget -c -nc -t 0 %s/W0QQpZ%d -O p/p%08d.html" % (url, i, i)
         p = subprocess.Popen(u.split())
         p.wait()
+
 
 def parse_cm_from_p():
     com = []
@@ -22,7 +25,7 @@ def parse_cm_from_p():
         print("Parsing %d / 3233 .." % (i))
 
         filename = r"p/p%08d.html" % (i)
-        with open (filename, "r") as myfile:
+        with open(filename, "r") as myfile:
             data = myfile.read()
         m = re.findall(r"%s/view/\d+" % (url), data)
 
@@ -35,6 +38,7 @@ def parse_cm_from_p():
         p.write(i.strip() + os.linesep)
     p.close()
     print "Write file 'p/p.txt' OK!"
+
 
 def download_cm():
     for line in open(r"p/p.txt"):
@@ -55,6 +59,7 @@ def download_cm():
         u = r"wget -c -nc -t 0 %s -O cm/cm%s_rent.html" % (url_rent, id)
         p = subprocess.Popen(u.split())
         p.wait()
+
 
 def main():
     download_p()

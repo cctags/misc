@@ -16,4 +16,12 @@
 ggVGg?
 ```
 
+### Search and replace in multiple buffers
+
+```
+:bufdo %s/pattern/replace/ge | update
+```
+
+[reference](http://vim.wikia.com/wiki/Search_and_replace_in_multiple_buffers)
+
 <!-- vim: set ft=markdown: -->

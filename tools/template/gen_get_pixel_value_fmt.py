@@ -9,11 +9,11 @@ Usage:
 
 
 def gen_get_header(text):
-    print "void GetPixelValue_%s(gctUINT32 Value, gctUINT32 *R, gctUINT32 *G, gctUINT32 *B, gctUINT32 *A);" % (text)
+    print "void GetPixelValue_%s(unsigned int Value, unsigned int *R, unsigned int *G, unsigned int *B, unsigned int *A);" % (text)
 
 
 def gen_set_header(text):
-    print "gctUINT32 SetPixelValue_%s(gctUINT32 R, gctUINT32 G, gctUINT32 B, gctUINT32 A);" % (text)
+    print "unsigned int SetPixelValue_%s(unsigned int R, unsigned int G, unsigned int B, unsigned int A);" % (text)
 
 
 def gen_get_func(text):
@@ -26,10 +26,10 @@ def gen_get_func(text):
         width.insert(0, [i + end - 1, end])
         end = width[0][0] + 1
 
-    print "static void GetPixelValue_%s(gctUINT32 Value, gctUINT32 *R, gctUINT32 *G, gctUINT32 *B, gctUINT32 *A)" % (text)
+    print "static void GetPixelValue_%s(unsigned int Value, unsigned int *R, unsigned int *G, unsigned int *B, unsigned int *A)" % (text)
     print "{"
     for i in range(len(component)):
-        print "    *%s = gcmGETFIELD(Value, %d:%d);" % (component[i], width[i][0], width[i][1])
+        print "    *%s = prefixmGETFIELD(Value, %d:%d);" % (component[i], width[i][0], width[i][1])
     if len(component) < 4:
         print "    *A = 0x100;"
     print "}"
@@ -46,12 +46,12 @@ def gen_set_func(text):
         width.insert(0, [i + end - 1, end])
         end = width[0][0] + 1
 
-    print "static gctUINT32 SetPixelValue_%s(gctUINT32 R, gctUINT32 G, gctUINT32 B, gctUINT32 A)" % (text)
+    print "static unsigned int SetPixelValue_%s(unsigned int R, unsigned int G, unsigned int B, unsigned int A)" % (text)
     print "{"
-    print "    gctUINT32 value = 0;"
+    print "    unsigned int value = 0;"
     print ""
     for i in range(len(component)):
-        print "    value = gcmSETFIELD(value, %d:%d, %s);" % (width[i][0], width[i][1], component[i])
+        print "    value = prefixmSETFIELD(value, %d:%d, %s);" % (width[i][0], width[i][1], component[i])
     print ""
     print "    return value;"
     print "}"
@@ -59,7 +59,7 @@ def gen_set_func(text):
 
 
 def gen_switch(text):
-    print "case gcvSURF_%s:" % (text)
+    print "case prefixvSURF_%s:" % (text)
     print "    m_GetPixelValueFunc = GetPixelValue_%s;" % (text)
     print "    m_SetPixelValueFunc = SetPixelValue_%s;" % (text)
     print "    break;"

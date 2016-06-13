@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import re
 import sys
 
 """
@@ -17,8 +18,9 @@ def gen_set_header(text):
 
 
 def gen_get_func(text):
-    component = text[::2]
-    size = [int(i) for i in text[1::2]]
+    groups = re.findall("[RGBAX]\d+", text)
+    component = [i[0] for i in groups]
+    size = [int(i[1:]) for i in groups]
 
     width = []
     end = 0
@@ -28,17 +30,22 @@ def gen_get_func(text):
 
     print "static void GetPixelValue_%s(unsigned int Value, unsigned int *R, unsigned int *G, unsigned int *B, unsigned int *A)" % (text)
     print "{"
+
     for i in range(len(component)):
-        print "    *%s = prefixmGETFIELD(Value, %d:%d);" % (component[i], width[i][0], width[i][1])
-    if len(component) < 4:
+        if component[i] != 'X':
+            print "    *%s = prefixmGETFIELD(Value, %d:%d);" % (component[i], width[i][0], width[i][1])
+
+    if 'X' in component:
         print "    *A = 0x100;"
+
     print "}"
     print ""
 
 
 def gen_set_func(text):
-    component = text[::2]
-    size = [int(i) for i in text[1::2]]
+    groups = re.findall("[RGBAX]\d+", text)
+    component = [i[0] for i in groups]
+    size = [int(i[1:]) for i in groups]
 
     width = []
     end = 0
@@ -51,7 +58,8 @@ def gen_set_func(text):
     print "    unsigned int value = 0;"
     print ""
     for i in range(len(component)):
-        print "    value = prefixmSETFIELD(value, %d:%d, %s);" % (width[i][0], width[i][1], component[i])
+        if component[i] != 'X':
+            print "    value = prefixmSETFIELD(value, %d:%d, %s);" % (width[i][0], width[i][1], component[i])
     print ""
     print "    return value;"
     print "}"
